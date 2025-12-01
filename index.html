@@ -1,242 +1,480 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
+
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sales Analyst AI</title>
+
     <style>
         :root {
+
             --primary-color: #0f62fe;
+
             /* IBM Blue / Professional Blue */
+
             --primary-hover: #0353e9;
+
             --background-color: #f4f7f6;
+
             --header-bg: #ffffff;
+
             --text-color: #161616;
+
             --border-color: #e0e0e0;
+
             --footer-bg: #f4f7f6;
+
             --footer-text: #6f6f6f;
+
         }
+
+
 
         * {
+
             margin: 0;
+
             padding: 0;
+
             box-sizing: border-box;
+
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
         }
+
+
 
         body {
+
             background-color: var(--background-color);
+
             color: var(--text-color);
+
             display: flex;
+
             flex-direction: column;
+
             min-height: 100vh;
+
         }
+
+
 
         /* Header Styles */
+
         header {
+
             background-color: var(--header-bg);
+
             padding: 1rem 2rem;
+
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             border-bottom: 1px solid var(--border-color);
+
             height: 70px;
+
         }
+
+
 
         .logo-area {
+
             display: flex;
+
             align-items: center;
+
             gap: 12px;
+
         }
+
+
 
         .logo-icon {
+
             width: 32px;
+
             height: 32px;
+
             background: linear-gradient(135deg, var(--primary-color), #00b4d8);
+
             border-radius: 8px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             color: white;
+
             font-weight: bold;
+
             font-size: 18px;
+
         }
+
+
 
         h1 {
+
             font-size: 1.25rem;
+
             font-weight: 600;
+
             color: #1a1a1a;
+
         }
+
+
 
         .controls {
+
             display: flex;
+
             gap: 1rem;
+
         }
+
+
 
         button {
+
             background-color: var(--primary-color);
+
             color: white;
+
             border: none;
+
             padding: 0.6rem 1.2rem;
+
             border-radius: 6px;
+
             font-size: 0.9rem;
+
             font-weight: 500;
+
             cursor: pointer;
+
             transition: background-color 0.2s ease, transform 0.1s ease;
+
             display: flex;
+
             align-items: center;
+
             gap: 8px;
+
         }
+
+
 
         button:hover {
+
             background-color: var(--primary-hover);
+
         }
+
+
 
         button:active {
+
             transform: scale(0.98);
+
         }
+
+
 
         /* Main Content */
+
         main {
+
             flex: 1;
+
             padding: 2rem;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             justify-content: center;
+
         }
+
+
 
         .dashboard-container {
+
             width: 100%;
+
             max-width: 1600px;
+
             background: white;
+
             border-radius: 12px;
+
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+
             overflow: hidden;
+
             border: 1px solid var(--border-color);
+
             height: 80vh;
+
             /* Requirement: 80% of screen height (approx) */
+
             display: flex;
+
             flex-direction: column;
+
         }
+
+
 
         iframe {
+
             width: 100%;
+
             height: 100%;
+
             border: none;
+
             background-color: #f8f9fa;
+
             /* Placeholder bg while loading */
+
         }
+
+
 
         /* Footer */
+
         footer {
+
             background-color: var(--footer-bg);
+
             color: var(--footer-text);
+
             text-align: center;
+
             padding: 1rem;
+
             font-size: 0.85rem;
+
             border-top: 1px solid var(--border-color);
+
         }
+
+
 
         /* Loading State */
+
         .loading-overlay {
+
             position: absolute;
+
             top: 0;
+
             left: 0;
+
             right: 0;
+
             bottom: 0;
+
             background: rgba(255, 255, 255, 0.8);
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             z-index: 10;
+
             pointer-events: none;
+
             opacity: 0;
+
             transition: opacity 0.3s ease;
+
         }
 
+
+
         .loading-overlay.active {
+
             opacity: 1;
+
             pointer-events: all;
+
         }
     </style>
+
 </head>
+
+
 
 <body>
 
+
+
     <header>
+
         <div class="logo-area">
+
             <div class="logo-icon">Q</div>
+
             <h1>Sales Analyst AI</h1>
+
         </div>
+
         <div class="controls">
+
             <button id="refreshBtn" onclick="refreshSession()">
+
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
+
                     <path d="M23 4v6h-6"></path>
+
                     <path d="M1 20v-6h6"></path>
+
                     <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+
                 </svg>
+
                 Refresh Session
+
             </button>
+
         </div>
+
     </header>
 
+
+
     <main>
+
         <div class="dashboard-container" style="position: relative;">
+
             <div id="loader" class="loading-overlay">Loading...</div>
+
             <iframe id="q-frame" title="QuickSight Q" allowfullscreen></iframe>
+
         </div>
+
     </main>
 
+
+
     <footer>
+
         <p>&copy; 2025 Sales Analyst AI. Powered by Amazon QuickSight Q.</p>
+
     </footer>
 
+
+
     <script>
+
         // CONFIGURATION
-        const EMBED_URL = 'PLACEHOLDER';
+
+        const EMBED_URL = 'https://us-west-2.quicksight.aws.amazon.com/embedding/a54dbbc94600458ca01c40ef61241f38/q/search/nre/hVccKYeztF96VPpCBLZjb8wQKQkXPApV?code=AYABeI6QMxjh-SMEk3S0BJV1oCEAAAABAAdhd3Mta21zAEthcm46YXdzOmttczp1cy13ZXN0LTI6OTAwNjQ5NDI3MTk2OmtleS9iYzAzMTYzMy0xYzJiLTRlMzEtYWM5ZC0yODQ2NDkwZjEyM2YAuAECAQB4axfmRi-g_Gr25A3bfqnRdzvH02kXlJnARGqw_AgopMABOp-ZDd14Z5tLGEJu89dRewAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDKWUqueyGskx256zfgIBEIA7bZWg9OHtYPH7QKvghelwokRxkLtsv8_D59hBr0AVBbmwuk_RNERV91dLqo1W8B5S1t8iKX_33jHJwAMCAAAAAAwAABAAAAAAAAAAAAAAAAAApl5hicsd0oAze6wt4FYmif____8AAAABAAAAAAAAAAAAAAABAAAAoeSXVV9mUBtczXh0O6o6DM0mgyKZZdfs_bZowd-W8PLSuhBt4ffPWcq-bzXpEKnEwj2ecZks6octtOSDiXJUPyCeoII58WNI7UL8Yb0VPUc3Um7Ba9CfgzZu6vbQUi_lmNdMkRbjmXJG2Ib8IYOPFKBHfgBKEWSoErKyzAV4GkjVpXyU9s1Jft1G553R2j76KBuxbtw0B0JfE5rSbuD3zYgyOWSU23EWk3Jfa2EeHSpyXA%3D%3D&identityprovider=quicksight&isauthcode=true';
+
+
 
         // DOM Elements
+
         const iframe = document.getElementById('q-frame');
+
         const loader = document.getElementById('loader');
 
+
+
         function init() {
-            if (EMBED_URL === 'https://quicksight.aws.amazon.com/embed/quicksight/us-west-2/595400292385/default/hVccKYeztF96VPpCBLZjb8wQKQkXPApV?directoryHandle=...&auth_code=ABC123' || !EMBED_URL) {
+
+            if (EMBED_URL === 'PLACEHOLDER' || !EMBED_URL) {
+
                 console.warn('Embed URL is not set. Please replace PLACEHOLDER with a valid URL.');
+
                 // Optional: Show a message in the iframe if URL is missing
+
                 iframe.srcdoc = '<div style="display:flex;justify-content:center;align-items:center;height:100%;font-family:sans-serif;color:#666;"><h3>Embed URL not configured.</h3></div>';
+
                 return;
+
             }
 
+
+
             loadIframe();
+
         }
+
+
 
         function loadIframe() {
+
             // Show loader
+
             loader.classList.add('active');
 
+
+
             // Set source
+
             iframe.src = EMBED_URL;
 
+
+
             // Hide loader on load
+
             iframe.onload = () => {
+
                 loader.classList.remove('active');
+
                 console.log('QuickSight Q Frame Loaded');
+
             };
+
         }
+
+
 
         function refreshSession() {
+
             console.log('Refreshing session...');
+
             loadIframe();
+
         }
 
+
+
         // Initialize on page load
+
         window.addEventListener('DOMContentLoaded', init);
 
+
+
     </script>
+
 </body>
+
+
 
 </html>

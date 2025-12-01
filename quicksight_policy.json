@@ -1,0 +1,10 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "quicksight:GenerateEmbedUrlForAnonymousUser",
+            "Resource": "arn:aws:quicksight:us-west-2:595400292385:topic/hVccKYeztF96VPpCBLZjb8wQKQkXPApV"
+        }
+    ]
+}
